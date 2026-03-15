@@ -1984,7 +1984,7 @@
     .contact-bar {
         margin-top: 1rem;
         font-size: 0.85rem;
-        color: #8892a0;
+        color: #ff00aa;
     }
 
     .contact-bar .separator {
@@ -2010,7 +2010,7 @@
     .copyable {
         cursor: pointer;
         position: relative;
-        color: #8892a0;
+        color: #ff00aa;
         transition:
             color 0.2s,
             text-shadow 0.2s;
@@ -2572,6 +2572,11 @@
         main {
             margin-top: 1rem;
             padding: 1rem 1.2rem;
+            background: linear-gradient(
+                135deg,
+                rgba(5, 8, 15, 0.88),
+                rgba(3, 5, 12, 0.92)
+            );
         }
 
         h1 {

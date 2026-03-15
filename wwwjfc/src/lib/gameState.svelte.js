@@ -1,5 +1,72 @@
 // Game State Engine - Svelte 5 runes-based reactive state
 
+// Pausable timer system — suspends when tab is hidden
+const activePausables = new Set();
+let _tabVisible = true;
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('visibilitychange', () => {
+    _tabVisible = !document.hidden;
+    if (_tabVisible) {
+      activePausables.forEach(p => p._resume());
+    } else {
+      activePausables.forEach(p => p._pause());
+    }
+  });
+}
+
+export function pausableTimeout(callback, delay) {
+  let remaining = delay;
+  let startTime = Date.now();
+  let timerId = null;
+  let done = false;
+
+  const p = {
+    _pause() {
+      if (done) return;
+      if (timerId) { clearTimeout(timerId); timerId = null; }
+      remaining -= (Date.now() - startTime);
+      if (remaining < 0) remaining = 0;
+    },
+    _resume() {
+      if (done) return;
+      startTime = Date.now();
+      timerId = setTimeout(() => {
+        done = true;
+        activePausables.delete(p);
+        callback();
+      }, remaining);
+    },
+    clear() {
+      done = true;
+      if (timerId) clearTimeout(timerId);
+      activePausables.delete(p);
+    },
+  };
+
+  activePausables.add(p);
+  if (_tabVisible) p._resume();
+  return p;
+}
+
+export function pausableInterval(callback, delay) {
+  let timer = null;
+
+  function tick() {
+    timer = pausableTimeout(() => {
+      callback();
+      tick();
+    }, delay);
+  }
+
+  tick();
+  return {
+    clear() {
+      if (timer) timer.clear();
+    },
+  };
+}
+
 function createGameState() {
   let currentNode = $state('intro');
   let inventory = $state([]);

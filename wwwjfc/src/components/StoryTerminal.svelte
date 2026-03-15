@@ -1,7 +1,7 @@
 <script>
   import { tick } from 'svelte';
   import DraggableWindow from './DraggableWindow.svelte';
-  import { gameState } from '../lib/gameState.svelte.js';
+  import { gameState, pausableTimeout } from '../lib/gameState.svelte.js';
   import { getNode } from '../lib/storyNodes.js';
   import { zalgoify } from '../lib/adContent.js';
 
@@ -54,7 +54,7 @@
   }
 
   function drainBaudQueue() {
-    if (baudTimer) { clearTimeout(baudTimer); baudTimer = null; }
+    if (baudTimer) { baudTimer.clear(); baudTimer = null; }
     if (baudQueue.length === 0) {
       baudActive = false;
       baudShowing = false;
@@ -84,14 +84,14 @@
       baudIdx++;
       baudText = baudFull.slice(0, baudIdx);
       scrollBottom();
-      baudTimer = setTimeout(baudTickChar, BAUD_CHAR_DELAY);
+      baudTimer = pausableTimeout(baudTickChar, BAUD_CHAR_DELAY);
     } else {
       // Line done — commit to history
       history = [...history, { type: baudType, text: baudFull }];
       baudShowing = false;
       baudText = '';
       scrollBottom();
-      baudTimer = setTimeout(drainBaudQueue, BAUD_LINE_PAUSE);
+      baudTimer = pausableTimeout(drainBaudQueue, BAUD_LINE_PAUSE);
     }
   }
 

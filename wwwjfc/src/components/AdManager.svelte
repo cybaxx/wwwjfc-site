@@ -3,7 +3,7 @@
   import { fade } from 'svelte/transition';
   import AdPopup from './AdPopup.svelte';
   import GlitchPopup from './GlitchPopup.svelte';
-  import { gameState } from '../lib/gameState.svelte.js';
+  import { gameState, pausableTimeout, pausableInterval } from '../lib/gameState.svelte.js';
   import { getRandomAd, getRandomNarrative, captchaPrompts, getRandomQuiz } from '../lib/adContent.js';
 
   let activeAds = $state([]);
@@ -191,21 +191,21 @@
   // Periodic product ad every 45s
   $effect(() => {
     if (!gameState.gameStarted) return;
-    const interval = setInterval(() => {
+    const interval = pausableInterval(() => {
       gameState.requestAd();
     }, 45000);
-    return () => clearInterval(interval);
+    return () => interval.clear();
   });
 
   // 50% chance narrative popup every 60s, 25% chance next one comes faster
   $effect(() => {
     if (!gameState.gameStarted) return;
-    let timeout;
+    let timer;
     function scheduleNext(delay) {
-      timeout = setTimeout(() => {
+      timer = pausableTimeout(() => {
         if (Math.random() < 0.5) {
           narrativePopup = getRandomNarrative();
-          setTimeout(() => { narrativePopup = null; }, 12000);
+          const dismissTimer = pausableTimeout(() => { narrativePopup = null; }, 12000);
           const nextDelay = Math.random() < 0.25 ? 30000 : 60000;
           scheduleNext(nextDelay);
         } else {
@@ -214,7 +214,7 @@
       }, delay);
     }
     scheduleNext(60000);
-    return () => clearTimeout(timeout);
+    return () => { if (timer) timer.clear(); };
   });
 
   function dismissNarrative() {

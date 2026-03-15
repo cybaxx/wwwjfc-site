@@ -2,7 +2,7 @@
   import { untrack } from 'svelte';
   import { fade, fly } from 'svelte/transition';
   import DraggableWindow from './DraggableWindow.svelte';
-  import { gameState } from '../lib/gameState.svelte.js';
+  import { gameState, pausableInterval } from '../lib/gameState.svelte.js';
   import { getNode } from '../lib/storyNodes.js';
 
   let { dialogOpen = $bindable(false) } = $props();
@@ -90,20 +90,20 @@
     }
 
     let i = 0;
-    if (typewriterInterval) clearInterval(typewriterInterval);
-    typewriterInterval = setInterval(() => {
+    if (typewriterInterval) typewriterInterval.clear();
+    typewriterInterval = pausableInterval(() => {
       if (i < text.length) {
         displayedText = text.slice(0, i + 1);
         i++;
       } else {
-        clearInterval(typewriterInterval);
+        typewriterInterval.clear();
         typewriterInterval = null;
         typewriterDone = true;
       }
     }, 18);
 
     return () => {
-      if (typewriterInterval) clearInterval(typewriterInterval);
+      if (typewriterInterval) typewriterInterval.clear();
     };
   });
 

@@ -1,5 +1,6 @@
 <script>
   import { fly, fade, scale } from 'svelte/transition';
+  import { pausableTimeout, pausableInterval } from '../lib/gameState.svelte.js';
 
   let {
     ad,
@@ -23,8 +24,8 @@
   // Tier 3: dodge, countdown, spawn
   $effect(() => {
     if (tier === 1) {
-      const t = setTimeout(() => { showReal = true; }, 3000);
-      return () => clearTimeout(t);
+      const t = pausableTimeout(() => { showReal = true; }, 3000);
+      return () => t.clear();
     } else {
       showReal = true;
     }
@@ -36,11 +37,11 @@
 
   $effect(() => {
     if (countdown > 0) {
-      const t = setInterval(() => {
+      const t = pausableInterval(() => {
         countdown--;
-        if (countdown <= 0) clearInterval(t);
+        if (countdown <= 0) t.clear();
       }, 1000);
-      return () => clearInterval(t);
+      return () => t.clear();
     }
   });
 
@@ -48,16 +49,15 @@
   $effect(() => {
     if (ad?._autoclose) {
       const dur = ad._autocloseDuration || 3000;
-      // Start flashing near end
-      const flashStart = setTimeout(() => {
+      const flashStart = pausableTimeout(() => {
         flashing = true;
       }, dur - 800);
-      const closeTimer = setTimeout(() => {
+      const closeTimer = pausableTimeout(() => {
         onclose();
       }, dur);
       return () => {
-        clearTimeout(flashStart);
-        clearTimeout(closeTimer);
+        flashStart.clear();
+        closeTimer.clear();
       };
     }
   });

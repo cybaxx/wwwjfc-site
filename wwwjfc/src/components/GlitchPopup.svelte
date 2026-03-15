@@ -1,6 +1,7 @@
 <script>
   import { tick } from 'svelte';
   import { scale } from 'svelte/transition';
+  import { pausableInterval, pausableTimeout } from '../lib/gameState.svelte.js';
 
   let {
     variant = 'terminal', // 'terminal' | 'mandelbrot'
@@ -41,17 +42,17 @@
 
   function startTerminalScroll() {
     let i = 0;
-    const interval = setInterval(() => {
+    const interval = pausableInterval(() => {
       if (i < codeLines.length) {
         terminalLines = [...terminalLines, codeLines[i]];
         i++;
       } else {
-        clearInterval(interval);
+        interval.clear();
         terminalDone = true;
-        setTimeout(onclose, 800);
+        pausableTimeout(onclose, 800);
       }
     }, 120);
-    return () => clearInterval(interval);
+    return () => interval.clear();
   }
 
   // === Mandelbrot ===
@@ -74,7 +75,7 @@
     function renderFrame() {
       if (frame >= totalFrames) {
         mandelbrotDone = true;
-        setTimeout(onclose, 600);
+        pausableTimeout(onclose, 600);
         return;
       }
 
