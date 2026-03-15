@@ -83,6 +83,7 @@ And beneath all of it, deep enough that the dream's rendering engine pretends it
       { id: 'go_community', text: '> find the Resistance safe house', next: 'community_entrance' },
       { id: 'go_jfc', text: '> follow the bass to JFC', next: 'jfc_entrance' },
       { id: 'go_fsociety', text: '> enter the ruined arcade', next: 'fsociety_entrance' },
+      { id: 'go_zeroday', text: '> descend to the zero day archives', next: 'zeroday_entrance' },
     ],
   },
 
@@ -1591,6 +1592,151 @@ You walk into the standup.
       { id: 'restart', text: '> jack back in (new game)', next: 'wake_up' },
       { id: 'credits', text: '> close and view the resume', next: null },
     ],
+  },
+
+  // === ZERO DAY ARCHIVES (4 nodes) ===
+  zeroday_entrance: {
+    id: 'zeroday_entrance',
+    location: 'zero-day-archives',
+    text: `The descent takes you through layers the dream forgot to render. Raw memory addresses scroll across exposed conduit walls like graffiti left by ghosts. The air tastes like burnt silicon and old math.
+
+Down here, beneath the simulation's polished surfaces, someone built a library. Not a pretty one — a bunker. The kind of place where knowledge goes to survive an apocalypse.
+
+The Zero Day Archives.
+
+Walls of scrolling exploit code cascade in waterfalls of green and amber. A shattered terminal flickers with half-corrupted CVE entries, each one a wound in some system that thought it was invulnerable. Shelves of glowing data-scrolls line the walls, organized by someone with the patience of a monk and the paranoia of a red teamer.
+
+A message is etched into the entrance arch in characters that predate the dream itself:
+
+"THOSE WHO UNDERSTAND BINARY EXPLOITATION SHALL INHERIT THE ROOT SHELL."
+
+The archives hum with potential. This place is older than MORPHEUS. Older than the dream. Someone built this as a training ground for a war that never ended.`,
+    choices: [
+      { id: 'explore_library', text: '> explore the data-scroll library', next: 'zeroday_library' },
+      { id: 'access_terminal', text: '> access the ancient terminal', next: 'zeroday_terminal' },
+      { id: 'leave_archives', text: '> ascend back to the nexus', next: 'hub_nexus' },
+    ],
+  },
+
+  zeroday_library: {
+    id: 'zeroday_library',
+    location: 'zero-day-archives',
+    text: `The library unfolds like a cathedral built by buffer overflow enthusiasts. Data-scrolls hover in organized clusters, each one pulsing with compressed knowledge — the kind that makes systems nervous.
+
+Categories materialize as you approach:
+
+[BINARY EXPLOITATION] — The art of making programs do things their authors explicitly told them not to do. Stack smashing, ROP chains, heap feng shui.
+
+[REVERSE ENGINEERING] — Taking things apart to understand how they think. Ghidra, IDA, radare2. The patient discipline of reading someone else's compiled thoughts.
+
+[FUZZING] — The philosophy of throwing garbage at software until it confesses its secrets. AFL, libFuzzer, honggfuzz.
+
+[HEAP MECHANICS] — tcache, fastbins, unsorted bins. The memory allocator's dirty laundry, laid bare.
+
+Each scroll you find can be studied later through the terminal's library system. Knowledge is the only currency that appreciates in a collapsing dream.`,
+    choices: [
+      { id: 'browse_scrolls', text: '> browse the 0day scrolls', next: 'zeroday_scrolls' },
+      { id: 'back_entrance', text: '> back to archives entrance', next: 'zeroday_entrance' },
+    ],
+  },
+
+  zeroday_scrolls: {
+    id: 'zeroday_scrolls',
+    location: 'zero-day-archives',
+    text: `The scrolls float before you, each one a compressed lesson from the age before the dream. Some glow brighter than others — the unfound ones, still waiting to be claimed.
+
+Reach out and take what knowledge you can carry. Each scroll unlocks deeper understanding, accessible through the terminal's "library" command.`,
+    choices: [
+      { id: 'back_library', text: '> back to library', next: 'zeroday_library' },
+    ],
+  },
+
+  zeroday_terminal: {
+    id: 'zeroday_terminal',
+    location: 'zero-day-archives',
+    text: `The terminal is ancient — pre-dream, pre-MORPHEUS, possibly pre-corporate. Its casing is scarred with heat marks from power surges that would have killed lesser hardware. The screen flickers to life at your touch, casting your face in amber.
+
+> ZERO DAY ARCHIVES — TRAINING SUBSYSTEM
+> STATUS: OPERATIONAL (autonomous)
+> UPTIME: [OVERFLOW ERROR] days
+> 
+> "The archives predate the dream. Someone built this
+>  as a training ground. The challenges within are
+>  remnants of a curriculum designed to forge exploit
+>  developers. Complete them, and the knowledge becomes
+>  yours."
+
+Three training simulations are loaded and ready. Each one is a complete exploitation scenario — the kind of puzzle that separates script kiddies from zero-day hunters.
+
+The terminal awaits your choice.`,
+    choices: [
+      { id: 'bonus_rop', text: '> [CHALLENGE] ROP Chain Construction', next: 'bonus_rop' },
+      { id: 'bonus_forensics', text: '> [CHALLENGE] Memory Forensics', next: 'bonus_forensics' },
+      { id: 'bonus_fuzzing', text: '> [CHALLENGE] Fuzz Campaign', next: 'bonus_fuzzing' },
+      { id: 'back_entrance2', text: '> back to archives entrance', next: 'zeroday_entrance' },
+    ],
+  },
+
+  // === BONUS CTF CHALLENGES (3 nodes) ===
+  bonus_rop: {
+    id: 'bonus_rop',
+    location: 'zero-day-archives',
+    text: `The terminal loads a binary exploitation sandbox. A vulnerable program materializes in the debug space — compiled without stack canaries, NX enabled, no PIE. Classic CTF setup.
+
+> TARGET: vuln_server (x86_64 ELF)
+> PROTECTIONS: NX enabled, no canary, no PIE, partial RELRO
+> OBJECTIVE: Achieve code execution via ROP chain
+>
+> Available commands:
+>   disas vuln_func    — disassemble the vulnerable function
+>   info registers     — show register state
+>   ropper gadgets     — search for ROP gadgets
+>   craft_chain <gadgets...> — build and execute ROP chain
+>   help               — show all commands
+
+The buffer overflow is waiting. Find the gadgets, build the chain, pop the shell.`,
+    choices: [],
+  },
+
+  bonus_forensics: {
+    id: 'bonus_forensics',
+    location: 'zero-day-archives',
+    text: `A memory forensics workstation powers up. A raw memory dump from a compromised system sits waiting for analysis — 4GB of volatile memory, captured moments after an intrusion was detected.
+
+> TARGET: memory.raw (4GB RAM dump)
+> SCENARIO: Suspected process injection attack
+> OBJECTIVE: Identify malicious process, extract injected payload
+>
+> Available commands:
+>   volatility pslist           — list running processes
+>   volatility pstree           — show process tree
+>   volatility memdump --pid N  — dump process memory
+>   strings dump.raw | grep X   — search for strings
+>   report <findings>           — submit analysis
+>   help                        — show all commands
+
+The memory doesn't lie. Find what's hiding.`,
+    choices: [],
+  },
+
+  bonus_fuzzing: {
+    id: 'bonus_fuzzing',
+    location: 'zero-day-archives',
+    text: `A fuzzing lab initializes. A target binary sits in the sandbox — a custom image parser with a history of memory corruption bugs. Your job: find the vulnerability, analyze the crash, report the finding.
+
+> TARGET: imgparse (custom image parser)
+> CORPUS: corpus/ (10 seed files)
+> OBJECTIVE: Find and classify the vulnerability
+>
+> Available commands:
+>   afl-fuzz -i corpus/ -o findings/ ./target  — run fuzzer
+>   ls findings/crashes/   — list crash files
+>   triage <crash_file>    — analyze a crash
+>   report <vuln_type> <function>  — submit finding
+>   help                   — show all commands
+
+Let the fuzzer run. When it crashes, you'll know where to look.`,
+    choices: [],
   },
 };
 
