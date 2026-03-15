@@ -564,7 +564,7 @@
 
         const responses = {
             help: "Available commands: help, whoami, skills, uptime, neofetch, matrix, hack, sudo, clear, exit",
-            whoami: "Eva Evergreene — Sr. DevSecOps Engineer / DevOps Architect\nSite Reliability Engineer. Cyberpunk enthusiast. Infrastructure hacker.\nClearance Level: ULTRAVIOLET",
+            whoami: "Cybabun1 — Sr. DevSecOps Engineer / DevOps Architect\nSite Reliability Engineer. Cyberpunk enthusiast. Infrastructure hacker.\nClearance Level: ULTRAVIOLET",
             skills: "╔══════════════════════════════════════╗\n║  SKILL MATRIX — THREAT ASSESSMENT   ║\n╠══════════════════════════════════════╣\n║  Kubernetes     ████████████░░  85%  ║\n║  Terraform      █████████████░  92%  ║\n║  AWS            ████████████░░  88%  ║\n║  Docker         █████████████░  95%  ║\n║  Prometheus     ███████████░░░  80%  ║\n║  Python         ████████████░░  85%  ║\n║  Go             ██████████░░░░  72%  ║\n║  Bash           █████████████░  95%  ║\n╠══════════════════════════════════════╣\n║  [THREAT LEVEL: MAXIMUM]             ║\n╚══════════════════════════════════════╝",
             uptime: `System uptime: ${Math.floor((Date.now() - new Date("2010-01-01").getTime()) / 86400000)} days\nCareer runtime: 15+ years\nIncidents resolved: ∞\nCoffee consumed: [OVERFLOW ERROR]`,
             neofetch: `        ╱╲         eva@mainframe\n       ╱  ╲        ──────────────\n      ╱    ╲       OS: CyberOS 2077 x86_64\n     ╱  ╱╲  ╲      Kernel: 6.6.6-hardened\n    ╱  ╱  ╲  ╲     Shell: zsh 5.9\n   ╱  ╱    ╲  ╲    Terminal: neural-link\n  ╱  ╱______╲  ╲   CPU: Wetware v3.0\n ╱______________╲  Memory: 32GB ECC\n                   Disk: ∞ (cloud-native)\n                   Uptime: 15 years`,
@@ -747,7 +747,10 @@
 
 <!-- Game Components -->
 <AdManager />
-<div class="story-backdrop" class:active={storyDialogOpen || storyTerminalOpen}></div>
+<div
+    class="story-backdrop"
+    class:active={storyDialogOpen || storyTerminalOpen}
+></div>
 <StoryOverlay bind:dialogOpen={storyDialogOpen} />
 <InventoryHUD />
 <StoryTerminal bind:visible={storyTerminalOpen} />
@@ -1432,7 +1435,10 @@
     /* --- Story/Terminal Backdrop --- */
     .story-backdrop {
         position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         background: rgba(0, 0, 0, 0.7);
         backdrop-filter: blur(3px);
         -webkit-backdrop-filter: blur(3px);
@@ -1870,7 +1876,7 @@
 
     h1.glitch::before,
     h1.glitch::after {
-        content: "Eva Evergreene";
+        content: "Cybabun1";
         position: absolute;
         top: 0;
         left: 0;
