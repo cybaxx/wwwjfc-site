@@ -84,6 +84,8 @@ function createGameState() {
   let fixedParts = $state(new Set());
   let activeChallenge = $state(null);
   let challengeState = $state({});
+  let scrollsFound = $state(new Set());
+  let bonusChallengesComplete = $state(new Set());
 
   const TIME_MACHINE_PARTS = [
     { id: 'chrono_coil', name: 'Chrono Coil', location: 'skills', description: 'A shimmering copper coil that bends temporal frequencies' },
@@ -170,6 +172,18 @@ function createGameState() {
     return fixedParts.has(id);
   }
 
+  function findScroll(id) {
+    scrollsFound = new Set([...scrollsFound, id]);
+  }
+
+  function hasScroll(id) {
+    return scrollsFound.has(id);
+  }
+
+  function completeBonusChallenge(id) {
+    bonusChallengesComplete = new Set([...bonusChallengesComplete, id]);
+  }
+
   function startChallenge(id) {
     activeChallenge = id;
     challengeState = {};
@@ -214,6 +228,8 @@ function createGameState() {
     fixedParts = new Set();
     activeChallenge = null;
     challengeState = {};
+    scrollsFound = new Set();
+    bonusChallengesComplete = new Set();
     visitedNodes = new Set(['wake_up']);
   }
 
@@ -235,6 +251,8 @@ function createGameState() {
     get activeChallenge() { return activeChallenge; },
     get challengeState() { return challengeState; },
     set challengeState(v) { challengeState = v; },
+    get scrollsFound() { return scrollsFound; },
+    get bonusChallengesComplete() { return bonusChallengesComplete; },
     get allPartsFixed() { return allPartsFixed; },
     get partsCollected() { return partsCollected; },
     get completionPercent() { return completionPercent; },
@@ -257,6 +275,9 @@ function createGameState() {
     incrementAdCount,
     fixPart,
     isPartFixed,
+    findScroll,
+    hasScroll,
+    completeBonusChallenge,
     startChallenge,
     completeChallenge,
     abandonChallenge,

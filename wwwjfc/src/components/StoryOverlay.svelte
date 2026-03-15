@@ -37,6 +37,34 @@
   const currentNodeData = $derived.by(() => {
     const node = getNode(gameState.currentNode);
     if (!node) return null;
+    // Dynamic choices for zeroday scrolls
+    if (node.id === 'zeroday_scrolls') {
+      const SCROLLS = [
+        { id: 'stack_frame', name: 'The Stack Frame', desc: 'Stack layout fundamentals' },
+        { id: 'rop_thinking', name: 'Return-Oriented Thinking', desc: 'ROP chain concepts' },
+        { id: 'heap_feng_shui', name: 'Heap Feng Shui', desc: 'Heap manipulation techniques' },
+        { id: 'fuzzer_intuition', name: "The Fuzzer's Intuition", desc: 'Coverage-guided fuzzing' },
+        { id: 'ghidra_eye', name: "Ghidra's Eye", desc: 'Decompilation methodology' },
+        { id: 'use_after_free', name: 'The Use-After-Free', desc: 'UAF mechanics' },
+        { id: 'format_string', name: 'Format String Oracles', desc: 'Format string exploitation' },
+        { id: 'aslr_entropy', name: 'ASLR & the Entropy Game', desc: 'Address randomization' },
+        { id: 'stack_canary', name: 'Canary in the Stack Mine', desc: 'Stack canary bypasses' },
+        { id: 'got_overwrite', name: 'The GOT Overwrite', desc: 'GOT/PLT hijacking' },
+        { id: 'race_condition', name: 'Race Condition Windows', desc: 'TOCTOU bugs' },
+        { id: 'null_byte', name: 'The Null Byte Terminator', desc: 'Off-by-one and null byte tricks' },
+      ];
+      const dynamicChoices = [];
+      SCROLLS.forEach(s => {
+        if (!gameState.hasScroll(s.id)) {
+          dynamicChoices.push({ id: `scroll_${s.id}`, text: `> take "${s.name}"`, next: 'zeroday_scrolls', scrollId: s.id });
+        }
+      });
+      if (dynamicChoices.length === 0) {
+        dynamicChoices.push({ id: 'all_found', text: '> all scrolls collected', next: 'zeroday_library' });
+      }
+      dynamicChoices.push({ id: 'back_library', text: '> back to library', next: 'zeroday_library' });
+      return { ...node, choices: dynamicChoices };
+    }
     // Dynamic choices for fsociety workbench
     if (node.id === 'fsociety_workbench') {
       const dynamicChoices = [];
@@ -139,6 +167,12 @@
 
     gameState.recordChoice(gameState.currentNode, choice.id);
 
+    // Handle scroll pickup
+    if (choice.scrollId) {
+      gameState.findScroll(choice.scrollId);
+      gameState.addNarrativeLine(`0day Scroll acquired: "${choice.text.replace('> take "', '').replace('"', '')}"`, 'item');
+    }
+
     if (choice.setFlag) {
       gameState.setFlag(choice.setFlag);
     }
@@ -155,6 +189,10 @@
     if (choice.next === null) {
       gameState.hideStory();
       return;
+    }
+    // Start challenge when entering a bonus node
+    if (choice.next.startsWith('bonus_')) {
+      gameState.startChallenge(choice.next);
     }
     // Start challenge when entering a fix node
     if (choice.next.startsWith('fix_')) {
