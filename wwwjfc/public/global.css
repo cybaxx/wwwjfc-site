@@ -1,0 +1,178 @@
+html, body {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	color: #e0e0e0;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Share Tech Mono', monospace;
+	background: #0a0a0f;
+	overflow-y: auto;
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+	cursor: crosshair;
+}
+
+/* Selection colors */
+::selection {
+	background: rgba(0, 240, 255, 0.3);
+	color: #fff;
+}
+
+::-moz-selection {
+	background: rgba(0, 240, 255, 0.3);
+	color: #fff;
+}
+
+a {
+	color: #00f0ff;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+a:visited {
+	color: #00f0ff;
+}
+
+/* Focus-visible for accessibility */
+a:focus-visible,
+button:focus-visible {
+	outline: 2px solid #00f0ff;
+	outline-offset: 2px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0f; }
+::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #ff00aa; }
+
+/* Staggered skill tag entrance */
+.tag {
+	opacity: 0;
+	transform: translateY(8px) scale(0.95);
+}
+
+.tag.tag-visible {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+	transition: opacity 0.3s ease-out, transform 0.3s ease-out, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+}
+
+/* Prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+
+	.tag {
+		opacity: 1 !important;
+		transform: none !important;
+	}
+}
+
+/* Print stylesheet */
+@media print {
+	body {
+		background: #fff;
+		color: #000;
+		font-family: 'Share Tech Mono', 'Courier New', monospace;
+	}
+
+	canvas,
+	.three-background,
+	.cyber-nav,
+	nav {
+		display: none !important;
+	}
+
+	main {
+		background: none !important;
+		border: none !important;
+		box-shadow: none !important;
+		backdrop-filter: none !important;
+		-webkit-backdrop-filter: none !important;
+		animation: none !important;
+		max-width: 100% !important;
+		margin: 0 !important;
+		padding: 1rem !important;
+	}
+
+	main::before {
+		display: none !important;
+	}
+
+	a {
+		color: #000 !important;
+		text-decoration: underline !important;
+	}
+
+	h1, h2, h3, h4, strong {
+		color: #000 !important;
+		text-shadow: none !important;
+	}
+
+	h2::before {
+		content: '' !important;
+	}
+
+	.hud-corner {
+		display: none !important;
+	}
+
+	.hud-frame {
+		border: none !important;
+	}
+
+	.experience-card {
+		border: 1px solid #ccc !important;
+		background: none !important;
+		box-shadow: none !important;
+		break-inside: avoid;
+	}
+
+	.tag {
+		border: 1px solid #999 !important;
+		background: none !important;
+		color: #000 !important;
+		box-shadow: none !important;
+	}
+
+	hr {
+		background: #ccc !important;
+	}
+
+	.site-footer {
+		border-top-color: #ccc !important;
+		color: #999 !important;
+	}
+
+	.terminal-prefix {
+		border-right: none !important;
+		width: auto !important;
+	}
+
+	.status-indicator,
+	.download-btn,
+	.terminal-overlay {
+		display: none !important;
+	}
+
+	section {
+		border-left: none !important;
+	}
+
+	li::before {
+		color: #000 !important;
+	}
+}
