@@ -847,7 +847,7 @@
                 <span>Open to opportunities</span>
             </div>
             <div class="contact-bar">
-                <span>Fort Collins, CO</span>
+                <span>Denver, Colorado</span>
                 <span class="separator">|</span>
                 <span
                     class="copyable"
@@ -858,7 +858,7 @@
                         e.key === "Enter" &&
                         copyToClipboard("1-970-355-0730", "phone")}
                 >
-                    1-970-355-0730
+                    1-800-1337
                     {#if copiedField === "phone"}<span class="copied-tooltip"
                             >Copied!</span
                         >{/if}
