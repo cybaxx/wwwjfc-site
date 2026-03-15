@@ -670,6 +670,7 @@
         }
         gameState.navigate(destinations[dest]);
         addLine(`[NAVIGATING TO ${dest.toUpperCase()}...]`, 'system');
+        if (Math.random() < 0.3) gameState.requestAd();
       },
 
       status: () => {

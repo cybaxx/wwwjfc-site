@@ -2,12 +2,15 @@
   import { untrack } from 'svelte';
   import { fade } from 'svelte/transition';
   import AdPopup from './AdPopup.svelte';
+  import GlitchPopup from './GlitchPopup.svelte';
   import { gameState } from '../lib/gameState.svelte.js';
   import { getRandomAd, getRandomNarrative, captchaPrompts, getRandomQuiz } from '../lib/adContent.js';
 
   let activeAds = $state([]);
   let narrativePopup = $state(null);
   let adCounter = 0;
+  let glitchPopup = $state(null); // { id, variant: 'terminal'|'mandelbrot' }
+  let glitchCount = 0;
 
   // Captcha state
   let captchaActive = $state(false);
@@ -74,6 +77,19 @@
   $effect(() => {
     if (gameState.pendingAd) {
       untrack(() => gameState.clearAdRequest());
+
+      // Every 7th ad is a glitch popup
+      const totalShown = gameState.totalAdsShown + 1;
+      if (totalShown % 7 === 0 && !glitchPopup) {
+        gameState.incrementAdCount();
+        glitchCount++;
+        glitchPopup = {
+          id: adCounter++,
+          variant: glitchCount % 2 === 0 ? 'mandelbrot' : 'terminal',
+        };
+        return;
+      }
+
       const tier = gameState.adTier;
       const ad = getRandomAd(tier);
       const id = ++adCounter;
@@ -171,6 +187,15 @@
     }
     activeAds = activeAds.filter(a => a._id !== ad._id);
   }
+
+  // Periodic product ad every 45s
+  $effect(() => {
+    if (!gameState.gameStarted) return;
+    const interval = setInterval(() => {
+      gameState.requestAd();
+    }, 45000);
+    return () => clearInterval(interval);
+  });
 
   // 50% chance narrative popup every 60s, 25% chance next one comes faster
   $effect(() => {
@@ -283,6 +308,16 @@
         />
       </div>
     {/each}
+  </div>
+{/if}
+
+<!-- Glitch Popup -->
+{#if glitchPopup}
+  <div class="ad-overlay" transition:fade={{ duration: 200 }}>
+    <GlitchPopup
+      variant={glitchPopup.variant}
+      onclose={() => { glitchPopup = null; }}
+    />
   </div>
 {/if}
 

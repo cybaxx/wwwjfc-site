@@ -148,7 +148,7 @@
       gameState.addNarrativeLine(`Acquired: ${gameState.TIME_MACHINE_PARTS.find(p => p.id === currentNodeData.grantsItem)?.name}`, 'item');
     }
 
-    if (Math.random() < 0.3) {
+    if (Math.random() < 0.6) {
       gameState.requestAd();
     }
 
